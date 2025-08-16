@@ -1,146 +1,185 @@
-# Chatbot Application
+# Royal Studio - AI Chatbot with Image Generation & SMS
 
-A full-stack chatbot application with a React frontend and Flask backend.
+A premium AI-powered web application featuring elegant chat interactions, advanced image generation, and SMS messaging capabilities.
 
-## Project Structure
+## ✨ Features
+
+- **🤖 Intelligent Chat**: AI-powered conversations with contextual responses
+- **🎨 Image Generation**: Advanced AI image creation with timeout handling and retry mechanisms
+- **📱 SMS Integration**: Send messages via Twilio integration
+- **🎭 Royal UI**: Elegant, responsive design with premium animations
+- **⚡ Real-time**: Live progress tracking and status updates
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.8+
+- Node.js 16+
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Chatbot-main
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` and add your API keys:
+   ```bash
+   HUGGINGFACE_API_KEY=your_huggingface_api_key_here
+   # Optional: Add Twilio credentials for SMS features
+   TWILIO_ACCOUNT_SID=your_twilio_account_sid_here
+   TWILIO_AUTH_TOKEN=your_twilio_auth_token_here
+   TWILIO_PHONE_NUMBER=your_twilio_phone_number_here
+   ```
+
+3. **Install Python dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install Frontend dependencies**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+5. **Build the frontend**
+   ```bash
+   npm run build
+   cd ..
+   ```
+
+6. **Run the application**
+   ```bash
+   python app.py
+   ```
+
+The application will be available at `http://localhost:5000`
+
+## 🛠️ Development
+
+### Frontend Development
+```bash
+cd frontend
+npm run dev  # Runs on http://localhost:8080
+```
+
+### Backend Development
+```bash
+python app.py  # Runs on http://localhost:5000
+```
+
+## 📋 API Endpoints
+
+- `POST /api/chat` - Chat with AI
+- `POST /api/generate-image` - Generate images
+- `POST /api/send-sms` - Send SMS messages
+- `GET /api/sms-status` - Check SMS service status
+- `GET /api/events` - Get events list
+- `GET /api/hackathons` - Get hackathons list
+
+## 🎯 Image Generation Features
+
+- **Dynamic Timeouts**: Automatically adjusts based on prompt complexity
+  - Simple prompts: 2 minutes
+  - Medium complexity: 3 minutes
+  - High complexity: 4 minutes
+- **Retry Mechanism**: Automatic retry with exponential backoff
+- **Progress Tracking**: Real-time generation progress with time estimates
+- **Error Handling**: Comprehensive error messages with recovery options
+
+## 🔧 Configuration
+
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `HUGGINGFACE_API_KEY` | Yes | API key for AI features |
+| `TWILIO_ACCOUNT_SID` | No | Twilio account SID for SMS |
+| `TWILIO_AUTH_TOKEN` | No | Twilio auth token for SMS |
+| `TWILIO_PHONE_NUMBER` | No | Twilio phone number for SMS |
+| `PORT` | No | Server port (default: 5000) |
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Image generation timeout**
+   - Try simplifying your prompt
+   - Complex prompts may take up to 4 minutes
+   - Use the retry feature if generation fails
+
+2. **SMS not working**
+   - Ensure Twilio credentials are correctly set in `.env`
+   - Check phone number format (must include country code)
+
+3. **Frontend not loading**
+   - Make sure to build the frontend: `cd frontend && npm run build`
+   - Check if all dependencies are installed
+
+4. **API errors**
+   - Verify your Hugging Face API key is valid
+   - Check network connectivity
+   - Review server logs for detailed error messages
+
+### Getting API Keys
+
+1. **Hugging Face API Key** (Required)
+   - Visit [Hugging Face Settings](https://huggingface.co/settings/tokens)
+   - Create a new token with read permissions
+
+2. **Twilio Credentials** (Optional)
+   - Sign up at [Twilio Console](https://console.twilio.com/)
+   - Get Account SID, Auth Token, and Phone Number from dashboard
+
+## 📁 Project Structure
 
 ```
 Chatbot-main/
 ├── app.py                 # Flask backend server
 ├── requirements.txt       # Python dependencies
-├── frontend/             # React frontend application
+├── .env.example          # Environment variables template
+├── frontend/             # React frontend
 │   ├── src/
-│   ├── package.json
-│   └── ...
-└── static/               # Static files served by Flask
+│   │   ├── pages/        # Main application pages
+│   │   ├── components/   # Reusable UI components
+│   │   └── lib/          # Utility functions
+│   ├── package.json      # Frontend dependencies
+│   └── vite.config.ts    # Build configuration
+└── static/               # Static assets
 ```
 
-## Setup Instructions
+## 🎨 UI Components
 
-### Backend Setup
+The application uses a premium design system with:
+- **Shadcn/ui**: Modern React components
+- **Tailwind CSS**: Utility-first styling
+- **Lucide Icons**: Beautiful icon library
+- **Custom Animations**: Royal-themed animations and effects
 
-1. **Create a virtual environment:**
-   ```bash
-   python -m venv .venv
-   ```
+## 📝 License
 
-2. **Activate the virtual environment:**
-   - Windows:
-     ```bash
-     .venv\Scripts\activate
-     ```
-   - macOS/Linux:
-     ```bash
-     source .venv/bin/activate
-     ```
+This project is licensed under the MIT License.
 
-3. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+## 🤝 Contributing
 
-4. **Create a .env file:**
-   Create a `.env` file in the root directory with:
-   ```
-   HUGGINGFACE_API_KEY=your_huggingface_api_key_here
-   PORT=5000
-   FLASK_ENV=development
-   
-   # Twilio SMS Configuration (Optional)
-   TWILIO_ACCOUNT_SID=your_twilio_account_sid
-   TWILIO_AUTH_TOKEN=your_twilio_auth_token
-   TWILIO_PHONE_NUMBER=your_twilio_phone_number
-   ```
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-5. **Run the backend server:**
-   ```bash
-   python app.py
-   ```
-   The backend will run on `http://localhost:5000`
+## 📞 Support
 
-### Frontend Setup
-
-1. **Navigate to the frontend directory:**
-   ```bash
-   cd frontend
-   ```
-
-### SMS Setup (Optional)
-
-To enable SMS functionality, you'll need a Twilio account:
-
-1. **Sign up for Twilio:**
-   - Go to [twilio.com](https://www.twilio.com) and create an account
-   - Get your Account SID and Auth Token from the Twilio Console
-   - Purchase a phone number for sending SMS
-
-2. **Add Twilio credentials to .env:**
-   ```
-   TWILIO_ACCOUNT_SID=your_account_sid_here
-   TWILIO_AUTH_TOKEN=your_auth_token_here
-   TWILIO_PHONE_NUMBER=your_twilio_phone_number_here
-   ```
-
-3. **Test SMS functionality:**
-   - Start the application
-   - Go to the SMS tab
-   - Enter a phone number in international format (e.g., +1234567890)
-   - Send a test message
-
-2. **Install Node.js dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Build the frontend:**
-   ```bash
-   npm run build
-   ```
-
-4. **For development (optional):**
-   ```bash
-   npm run dev
-   ```
-
-## Features
-
-- **Chat Interface**: Interactive chat with AI assistant
-- **Event Management**: View and manage events/hackathons
-- **Image Generation**: Generate images using AI
-- **SMS Messaging**: Send SMS messages using Twilio integration
-- **Modern UI**: Built with React, TypeScript, and Tailwind CSS
-- **Responsive Design**: Works on desktop and mobile devices
-
-## API Endpoints
-
-- `GET /api/events` - Get list of events
-- `GET /api/hackathons` - Get list of hackathons
-- `POST /api/chat` - Send chat messages
-- `POST /api/generate-image` - Generate images
-- `POST /api/send-sms` - Send SMS messages
-- `GET /api/sms-status` - Check SMS service status
-
-## Development
-
-The application uses:
-- **Backend**: Flask with CORS support
-- **Frontend**: React with TypeScript, Vite, and Tailwind CSS
-- **UI Components**: Shadcn/ui components
-- **Styling**: Tailwind CSS with custom design system
-
-## Running the Application
-
-1. Start the backend server (from root directory):
-   ```bash
-   python app.py
-   ```
-
-2. Build the frontend (from frontend directory):
-   ```bash
-   cd frontend
-   npm run build
-   ```
-
-3. Access the application at `http://localhost:5000`
-
-The Flask server will serve the built frontend files automatically.
+For issues and questions:
+1. Check the troubleshooting section above
+2. Review the API documentation
+3. Create an issue in the repository

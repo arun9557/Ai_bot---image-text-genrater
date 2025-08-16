@@ -215,12 +215,24 @@ def generate_image():
         seed = data.get('seed', 42)
         model = 'flux'  # Default model
         
-        # Generate image URL
-        image_url = f"https://pollinations.ai/p/{prompt}?width={width}&height={height}&seed={seed}&model={model}"
+        # URL encode the prompt to handle special characters
+        import urllib.parse
+        encoded_prompt = urllib.parse.quote(prompt)
         
-        # Download the image yaha se
-        response = requests.get(image_url)
+        # Generate image URL
+        image_url = f"https://pollinations.ai/p/{encoded_prompt}?width={width}&height={height}&seed={seed}&model={model}"
+        
+        print(f"Generating image with URL: {image_url}")
+        
+        # Download the image with proper headers
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        response = requests.get(image_url, headers=headers, timeout=120)
         response.raise_for_status()
+        
+        print(f"Image response status: {response.status_code}")
+        print(f"Content type: {response.headers.get('content-type')}")
         
         # Generate a unique filename
         filename = f"generated_{uuid.uuid4().hex}.jpg"
@@ -237,12 +249,14 @@ def generate_image():
         )
         
     except requests.exceptions.RequestException as e:
+        print(f"Request error: {str(e)}")
         return jsonify({
             "status": "error",
             "error": "Failed to generate image",
             "details": str(e)
         }), 500
     except Exception as e:
+        print(f"Unexpected error: {str(e)}")
         return jsonify({ 
             "status": "error",
             "error": "An unexpected error occurred",
