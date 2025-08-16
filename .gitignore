@@ -16,6 +16,7 @@ downloads/
 venv/
 env/
 ENV/
+.venv/
 
 # IDE
 .vscode/
@@ -27,3 +28,30 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Node modules
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+frontend/dist/
+frontend/build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+package-lock.json
+frontend/package-lock.json
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Test files
+test_image.jpg
+test_*.py

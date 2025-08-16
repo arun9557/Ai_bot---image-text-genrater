@@ -1,0 +1,165 @@
+/* stylelint-disable at-rule-no-unknown */
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Premium Royal Color Palette */
+    --background: 42 78% 95%; /* Creamy white */
+    --foreground: 220 50% 15%; /* Deep navy blue */
+
+    --card: 42 78% 97%;
+    --card-foreground: 220 50% 15%;
+
+    --popover: 42 78% 97%;
+    --popover-foreground: 220 50% 15%;
+
+    --primary: 220 50% 15%; /* Deep navy blue */
+    --primary-foreground: 42 78% 95%;
+
+    --secondary: 158 64% 25%; /* Rich emerald green */
+    --secondary-foreground: 42 78% 95%;
+
+    --muted: 42 35% 90%;
+    --muted-foreground: 220 25% 45%;
+
+    --accent: 45 93% 47%; /* Gold accents */
+    --accent-foreground: 220 50% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 42 78% 95%;
+
+    --border: 42 35% 85%;
+    --input: 42 35% 88%;
+    --ring: 45 93% 47%;
+
+    --radius: 0.75rem;
+    
+    /* Premium Gradients */
+    --gradient-royal: linear-gradient(135deg, hsl(220 50% 15%), hsl(158 64% 25%));
+    --gradient-subtle: linear-gradient(180deg, hsl(42 78% 97%), hsl(42 78% 94%));
+    --gradient-gold: linear-gradient(135deg, hsl(45 93% 47%), hsl(42 100% 55%));
+    
+    /* Premium Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(220 50% 15% / 0.15);
+    --shadow-gold: 0 8px 25px -8px hsl(45 93% 47% / 0.25);
+    --shadow-soft: 0 4px 20px -4px hsl(220 50% 15% / 0.08);
+    
+    /* Animations */
+    --transition-royal: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    /* Background Textures */
+    --texture-subtle: radial-gradient(circle at 25% 25%, hsl(42 78% 96%) 0%, transparent 50%),
+                      radial-gradient(circle at 75% 75%, hsl(158 64% 95%) 0%, transparent 50%);
+    --pattern-dots: radial-gradient(circle, hsl(220 50% 15% / 0.05) 1px, transparent 1px);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode with royal elegance */
+    --background: 220 50% 8%;
+    --foreground: 42 78% 92%;
+
+    --card: 220 50% 10%;
+    --card-foreground: 42 78% 92%;
+
+    --popover: 220 50% 10%;
+    --popover-foreground: 42 78% 92%;
+
+    --primary: 42 78% 92%;
+    --primary-foreground: 220 50% 15%;
+
+    --secondary: 158 64% 20%;
+    --secondary-foreground: 42 78% 92%;
+
+    --muted: 220 25% 18%;
+    --muted-foreground: 42 35% 65%;
+
+    --accent: 45 93% 55%;
+    --accent-foreground: 220 50% 15%;
+
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 42 78% 92%;
+
+    --border: 220 25% 20%;
+    --input: 220 25% 18%;
+    --ring: 45 93% 55%;
+    
+    --gradient-royal: linear-gradient(135deg, hsl(220 50% 10%), hsl(158 64% 15%));
+    --gradient-subtle: linear-gradient(180deg, hsl(220 50% 12%), hsl(220 50% 8%));
+    --gradient-gold: linear-gradient(135deg, hsl(45 93% 55%), hsl(42 100% 65%));
+    
+    --shadow-elegant: 0 10px 30px -10px hsl(220 50% 5% / 0.4);
+    --shadow-gold: 0 8px 25px -8px hsl(45 93% 55% / 0.3);
+    --shadow-soft: 0 4px 20px -4px hsl(220 50% 5% / 0.2);
+    
+    --texture-subtle: radial-gradient(circle at 25% 25%, hsl(220 50% 12%) 0%, transparent 50%),
+                      radial-gradient(circle at 75% 75%, hsl(158 64% 12%) 0%, transparent 50%);
+    --pattern-dots: radial-gradient(circle, hsl(42 78% 92% / 0.1) 1px, transparent 1px);
+    
+    --sidebar-background: 220 50% 10%;
+    --sidebar-foreground: 42 78% 92%;
+    --sidebar-primary: 45 93% 55%;
+    --sidebar-primary-foreground: 220 50% 15%;
+    --sidebar-accent: 220 25% 18%;
+    --sidebar-accent-foreground: 42 78% 92%;
+    --sidebar-border: 220 25% 20%;
+    --sidebar-ring: 45 93% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image: var(--texture-subtle), var(--pattern-dots);
+    background-size: 400px 400px, 20px 20px;
+    background-position: 0 0, 0 0;
+  }
+}
+
+@layer components {
+  /* stylelint-disable-next-line at-rule-no-unknown */
+  .glass-card {
+    @apply bg-card/70 backdrop-blur-md border border-border/50;
+  }
+  
+  /* stylelint-disable-next-line at-rule-no-unknown */
+  .royal-glow {
+    @apply relative before:absolute before:inset-0 before:-z-10 before:bg-gradient-gold before:opacity-20 before:blur-xl before:rounded-lg;
+  }
+  
+  /* stylelint-disable-next-line at-rule-no-unknown */
+  .elegant-hover {
+    @apply transition-all duration-500 hover:shadow-elegant hover:-translate-y-1;
+  }
+  
+  /* stylelint-disable-next-line at-rule-no-unknown */
+  .premium-input {
+    @apply bg-background/50 backdrop-blur-sm border-border/60 focus:border-accent focus:ring-2 focus:ring-accent/20;
+  }
+}
