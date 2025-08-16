@@ -2,7 +2,7 @@
   "name": "royal-studio-chatbot",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd frontend && npm run build && cd .. && xcopy /s /e /y frontend\\dist\\* dist\\"
+    "build": "cd frontend && npm install && npm run build && cd .. && mkdir -p dist && cp -r frontend/dist/* dist/"
   },
   "devDependencies": {
     "@types/node": "^24.3.0"
