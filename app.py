@@ -1,11 +1,12 @@
 from flask import Flask, jsonify, request, send_from_directory, send_file
 from flask_cors import CORS
-import requests
 import os
-import uuid
-import jsonj
 from dotenv import load_dotenv
-from io import BytesIO
+import requests
+from pathlib import Path
+
+app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
+CORS(app)  # Enable CORS for all routes
 
 # Load environment variables from .env file
 load_dotenv()
@@ -15,39 +16,29 @@ HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
 if not HUGGINGFACE_API_KEY:
     raise ValueError("Error: HUGGINGFACE_API_KEY not found in environment variables. Please create a .env file with your API key.")
-    # You can get an API key from: https://huggingface.co/settings/tokens
 
-# Initialize Flask app
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['PROPAGATE_EXCEPTIONS'] = True
-CORS(app)
-print("Flask app initialized with Hugging Face integration")
-
-# This is a sample dataset of hackathons.
-# In a real-world application, this would be replaced with a call to an
-# external API or a database query.
-SAMPLE_HACKATHONS = [
+# Sample data for events
+events = [
     {
         "id": 1,
-        "title": "Innovate India Hackathon",
-        "location": "Bengaluru",
-        "date": "2025-10-20",
-        "description": "A national-level hackathon focused on solving social challenges in India using technology. Topics include sustainable energy and smart cities."
+        "title": "AI Conference",
+        "location": "Bangalore",
+        "date": "2025-09-15",
+        "description": "Annual AI and Machine Learning conference featuring industry leaders and workshops."
     },
     {
         "id": 2,
-        "title": "Code for a Cause",
-        "location": "Online",
-        "date": "2025-11-15",
-        "description": "A virtual hackathon dedicated to building solutions for non-profit organizations. Open to all skill levels."
+        "title": "Tech Hackathon",
+        "location": "Delhi",
+        "date": "2025-10-20",
+        "description": "48-hour coding competition for developers to build innovative solutions."
     },
     {
         "id": 3,
-        "title": "Tech Titans India",
+        "title": "Web3 Summit",
         "location": "Hyderabad",
-        "date": "2025-12-05",
-        "description": "An in-person event for seasoned developers to tackle advanced problems in AI and blockchain. Huge prizes await the top teams."
+        "date": "2025-11-05",
+        "description": "Explore the future of decentralized technologies and blockchain."
     },
     {
         "id": 4,
@@ -58,20 +49,21 @@ SAMPLE_HACKATHONS = [
     }
 ]
 
+# Serve React App
 @app.route('/')
-def home():
-    """Serve the main chat interface."""
-    return send_from_directory('.', 'index.html')
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/<path:path>')
-def serve_static(path):
-    """Serve static files."""
-    return send_from_directory('.', path)
+# Handle 404s by serving index.html
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.static_folder, 'index.html')
 
+# API Routes
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """
-    API endpoint for chat interactions using OpenAI API.
+    API endpoint for chat interactions.
     """
     try:
         print("Received chat request")
@@ -81,24 +73,8 @@ def chat():
         if not user_message:
             return jsonify({"error": "No message provided"}), 400
 
-        # Simple rule-based responses
-        user_message = user_message.lower()
-        
-        if any(word in user_message for word in ['hello', 'hi', 'hey']):
-            response = "Hello! How can I assist you today?"
-        elif any(word in user_message for word in ['how are you', 'how are you doing']):
-            response = "I'm just a computer program, but I'm functioning well! How can I help you?"
-        elif any(word in user_message for word in ['thank', 'thanks']):
-            response = "You're welcome! Is there anything else I can help you with?"
-        elif any(word in user_message for word in ['bye', 'goodbye']):
-            response = "Goodbye! Have a great day!"
-        elif any(word in user_message for word in ['help', 'what can you do']):
-            response = "I can help you with general questions and generate AI images. Try asking me something or switch to the Image Generation tab to create images!"
-        elif 'image' in user_message and 'generate' in user_message:
-            response = "To generate an image, please switch to the 'Image Generation' tab above and enter your image description."
-        else:
-            response = "I'm a simple AI assistant. You can ask me general questions or generate images using the Image Generation tab above."
-        
+        # Simple response for now
+        response = "I'm a simple AI assistant. You can ask me general questions or generate images using the Image Generation tab above."
         return jsonify({"response": response})
             
     except requests.exceptions.RequestException as e:
@@ -107,10 +83,18 @@ def chat():
             "details": str(e)
         }), 500
     except Exception as e:
-        return jsonify({
-            "error": "An unexpected error occurred",
-            "details": str(e)
-        }), 500
+        print(f"Error in chat endpoint: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/events', methods=['GET'])
+def get_events():
+    """
+    API endpoint to get the list of events.
+    """
+    try:
+        return jsonify(events)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/hackathons', methods=['GET'])
 def get_hackathons():
