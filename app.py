@@ -4,18 +4,24 @@ import os
 from dotenv import load_dotenv
 import requests
 from pathlib import Path
+import uuid
+from io import BytesIO
 
+# Initialize Flask app
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
 CORS(app)  # Enable CORS for all routes
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
 # Get API keys from environment variables
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
 if not HUGGINGFACE_API_KEY:
-    raise ValueError("Error: HUGGINGFACE_API_KEY not found in environment variables. Please create a .env file with your API key.")
+    raise ValueError(
+        "Error: HUGGINGFACE_API_KEY not found in environment variables. "
+        "Please create a .env file with your API key."
+    )
 
 # Sample data for events
 events = [
@@ -45,36 +51,43 @@ events = [
         "title": "Startup Weekend",
         "location": "Mumbai",
         "date": "2025-12-10",
-        "description": "A 54-hour event where participants build a complete business idea from scratch. Focus is on business and product development."
+        "description": "A 54-hour event where participants build a complete business idea from scratch."
     }
 ]
 
-# Serve React App
+
+def serve_frontend():
+    """Serve the frontend application."""
+    return send_from_directory(app.static_folder, 'index.html')
+
+
+# Routes
 @app.route('/')
-def serve():
-    return send_from_directory(app.static_folder, 'index.html')
+def index():
+    """Serve the main application page."""
+    return serve_frontend()
 
-# Handle 404s by serving index.html
+
 @app.errorhandler(404)
-def not_found(e):
-    return send_from_directory(app.static_folder, 'index.html')
+def not_found(_):
+    """Handle 404 errors by serving the frontend."""
+    return serve_frontend()
 
-# API Routes
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    """
-    API endpoint for chat interactions.
-    """
+    """Handle chat interactions."""
     try:
-        print("Received chat request")
         data = request.get_json()
         user_message = data.get('message', '')
         
         if not user_message:
             return jsonify({"error": "No message provided"}), 400
 
-        # Simple response for now
-        response = "I'm a simple AI assistant. You can ask me general questions or generate images using the Image Generation tab above."
+        response = (
+            "I'm a simple AI assistant. You can ask me general questions "
+            "or generate images using the Image Generation tab above."
+        )
         return jsonify({"response": response})
             
     except requests.exceptions.RequestException as e:
@@ -84,17 +97,18 @@ def chat():
         }), 500
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Internal server error"}), 500
+
 
 @app.route('/api/events', methods=['GET'])
 def get_events():
-    """
-    API endpoint to get the list of events.
-    """
+    """Get the list of events."""
     try:
         return jsonify(events)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"Error getting events: {str(e)}")
+        return jsonify({"error": "Failed to fetch events"}), 500
+
 
 @app.route('/api/hackathons', methods=['GET'])
 def get_hackathons():
@@ -123,7 +137,7 @@ def get_hackathons():
         # hackathons = response.json()
 
         # For now, we return the sample data.
-        hackathons = SAMPLE_HACKATHONS
+        hackathons = events
 
         # Return the hackathon data as a JSON response with success status
         return jsonify({
@@ -145,12 +159,11 @@ def get_hackathons():
     except Exception as e:
         # Log unexpected errors
         print(f"Unexpected Error: {str(e)}")
-        return jsonify({
+        return jsonify({ 
             "status": "error",
             "error": "An unexpected error occurred",
             "details": str(e)
         }), 500
-        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
 @app.route('/api/generate-image', methods=['POST'])
 def generate_image():
