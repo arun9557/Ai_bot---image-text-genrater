@@ -6,6 +6,8 @@ import requests
 from pathlib import Path
 import uuid
 from io import BytesIO
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
@@ -16,6 +18,17 @@ load_dotenv()
 
 # Get API keys from environment variables
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
+
+# Initialize Twilio client if credentials are available
+twilio_client = None
+if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
+    try:
+        twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    except Exception as e:
+        print(f"Warning: Failed to initialize Twilio client: {e}")
 
 if not HUGGINGFACE_API_KEY:
     raise ValueError(
@@ -79,15 +92,29 @@ def chat():
     """Handle chat interactions."""
     try:
         data = request.get_json()
-        user_message = data.get('message', '')
+        user_message = data.get('message', '').lower().strip()
         
         if not user_message:
             return jsonify({"error": "No message provided"}), 400
 
-        response = (
-            "I'm a simple AI assistant. You can ask me general questions "
-            "or generate images using the Image Generation tab above."
-        )
+        # Simple response logic based on keywords
+        if any(word in user_message for word in ['hello', 'hi', 'hey', 'namaste']):
+            response = "Hello! Welcome to Royal Studio. How can I assist you today? You can ask me questions, generate images, or send SMS messages."
+        elif any(word in user_message for word in ['help', 'what can you do', 'features']):
+            response = "I can help you with:\n• Chat conversations\n• Image generation\n• SMS messaging\n• Event information\n\nWhat would you like to try?"
+        elif any(word in user_message for word in ['image', 'picture', 'generate', 'create']):
+            response = "To generate images, please go to the 'Image Generator' tab above. You can describe what you want to create!"
+        elif any(word in user_message for word in ['sms', 'message', 'text', 'phone']):
+            response = "To send SMS messages, please go to the 'SMS' tab above. You'll need to configure Twilio credentials first."
+        elif any(word in user_message for word in ['event', 'hackathon', 'conference']):
+            response = "I can show you upcoming events and hackathons! Check out the events section for more details."
+        elif any(word in user_message for word in ['thank', 'thanks']):
+            response = "You're welcome! I'm here to help. Feel free to ask me anything else."
+        elif any(word in user_message for word in ['bye', 'goodbye', 'exit']):
+            response = "Goodbye! Have a wonderful day. Come back anytime for more royal experiences!"
+        else:
+            response = "That's an interesting question! I'm a simple AI assistant. You can ask me about features, generate images, or send SMS messages. What would you like to know more about?"
+        
         return jsonify({"response": response})
             
     except requests.exceptions.RequestException as e:
@@ -221,6 +248,82 @@ def generate_image():
             "error": "An unexpected error occurred",
             "details": str(e)
         }), 500
+
+
+@app.route('/api/send-sms', methods=['POST'])
+def send_sms():
+    """
+    API endpoint to send SMS messages using Twilio.
+    
+    Expected JSON payload:
+    {
+        "to": "+1234567890",
+        "message": "Hello from your chatbot!"
+    }
+    """
+    try:
+        if not twilio_client:
+            return jsonify({
+                "status": "error",
+                "error": "SMS service not configured. Please add Twilio credentials to .env file."
+            }), 500
+        
+        data = request.get_json()
+        to_number = data.get('to', '')
+        message_text = data.get('message', '')
+        
+        if not to_number or not message_text:
+            return jsonify({
+                "status": "error",
+                "error": "Both 'to' phone number and 'message' are required"
+            }), 400
+        
+        # Validate phone number format (basic validation)
+        if not to_number.startswith('+'):
+            return jsonify({
+                "status": "error",
+                "error": "Phone number must be in international format (e.g., +1234567890)"
+            }), 400
+        
+        # Send SMS using Twilio
+        message = twilio_client.messages.create(
+            body=message_text,
+            from_=TWILIO_PHONE_NUMBER,
+            to=to_number
+        )
+        
+        return jsonify({
+            "status": "success",
+            "message": "SMS sent successfully",
+            "sid": message.sid,
+            "to": to_number
+        })
+        
+    except TwilioRestException as e:
+        return jsonify({
+            "status": "error",
+            "error": "Failed to send SMS",
+            "details": str(e)
+        }), 500
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "error": "An unexpected error occurred",
+            "details": str(e)
+        }), 500
+
+
+@app.route('/api/sms-status', methods=['GET'])
+def sms_status():
+    """
+    Check if SMS service is configured and available.
+    """
+    return jsonify({
+        "status": "success",
+        "sms_configured": twilio_client is not None,
+        "message": "SMS service is configured" if twilio_client else "SMS service not configured"
+    })
+
 
 if __name__ == '__main__':
     # Create static directory if it doesn't exist
