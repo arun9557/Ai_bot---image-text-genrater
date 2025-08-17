@@ -295,76 +295,77 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Header */}
       <header className="border-b border-border glass-card sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-6">
+        <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-gold rounded-xl shadow-gold royal-glow animate-float">
-                <Crown className="h-6 w-6 text-primary" />
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="p-1.5 sm:p-2 bg-gradient-gold rounded-xl shadow-gold royal-glow animate-float">
+                <Crown className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
-                             <div>
-                 <h1 className="text-2xl font-playfair font-semibold text-foreground">Royal Studio</h1>
-                 <p className="text-sm text-muted-foreground font-montserrat">Premium AI Experience</p>
-                 <p className="text-xs text-accent font-montserrat font-medium mt-1">by Arun Shekhar</p>
-               </div>
+              <div>
+                <h1 className="text-lg sm:text-2xl font-playfair font-semibold text-foreground">Royal Studio</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground font-montserrat">Premium AI Experience</p>
+                <p className="text-xs text-accent font-montserrat font-medium mt-1 hidden sm:block">by Arun Shekhar</p>
+              </div>
             </div>
-                         <div className="flex items-center space-x-6">
-               <StatusIndicator status="online" />
-               <div className="flex items-center space-x-2">
-                 <Heart className="h-5 w-5 text-accent animate-glow" />
-                 <span className="text-sm font-montserrat text-muted-foreground">Crafted with love</span>
-               </div>
-                               <div className="flex items-center space-x-2 bg-gradient-royal/20 px-4 py-2 rounded-lg border border-accent/30 shadow-elegant">
-                  <Crown className="h-5 w-5 text-accent animate-glow" />
-                  <span className="text-sm font-montserrat font-semibold text-foreground">
-                    Arun Shekhar
-                  </span>
-                </div>
-               <ThemeToggle />
-             </div>
+            <div className="flex items-center space-x-2 sm:space-x-6">
+              <StatusIndicator status="online" />
+              <div className="hidden md:flex items-center space-x-2">
+                <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-accent animate-glow" />
+                <span className="text-xs sm:text-sm font-montserrat text-muted-foreground">Crafted with love</span>
+              </div>
+              <div className="hidden lg:flex items-center space-x-2 bg-gradient-royal/20 px-2 sm:px-4 py-1 sm:py-2 rounded-lg border border-accent/30 shadow-elegant">
+                <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-accent animate-glow" />
+                <span className="text-xs sm:text-sm font-montserrat font-semibold text-foreground">
+                  Arun Shekhar
+                </span>
+              </div>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-12">
+      <main className="container mx-auto px-3 sm:px-6 py-6 sm:py-12">
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-12">
-          <div className="glass-card rounded-2xl p-2 shadow-elegant elegant-hover">
-            <div className="flex space-x-2">
+        <div className="flex justify-center mb-6 sm:mb-12">
+          <div className="glass-card rounded-2xl p-1 sm:p-2 shadow-elegant elegant-hover w-full max-w-md sm:max-w-none sm:w-auto">
+            <div className="flex space-x-1 sm:space-x-2">
               <Button
                 variant={activeTab === "chat" ? "default" : "ghost"}
                 onClick={() => setActiveTab("chat")}
-                className={`px-8 py-3 font-montserrat font-medium transition-royal relative overflow-hidden ${
+                className={`flex-1 sm:flex-none px-3 sm:px-8 py-2 sm:py-3 font-montserrat font-medium transition-royal relative overflow-hidden text-xs sm:text-sm ${
                   activeTab === "chat" 
                     ? "bg-gradient-royal text-primary-foreground shadow-soft royal-glow" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
-                <MessageCircle className="w-4 h-4 mr-2" />
+                <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 Chat
               </Button>
               <Button
                 variant={activeTab === "image" ? "default" : "ghost"}
                 onClick={() => setActiveTab("image")}
-                className={`px-8 py-3 font-montserrat font-medium transition-royal relative overflow-hidden ${
+                className={`flex-1 sm:flex-none px-3 sm:px-8 py-2 sm:py-3 font-montserrat font-medium transition-royal relative overflow-hidden text-xs sm:text-sm ${
                   activeTab === "image" 
                     ? "bg-gradient-royal text-primary-foreground shadow-soft royal-glow" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
-                <Sparkles className="w-4 h-4 mr-2" />
-                Image Generator
+                <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Image Generator</span>
+                <span className="sm:hidden">Image</span>
               </Button>
               <Button
                 variant={activeTab === "sms" ? "default" : "ghost"}
                 onClick={() => setActiveTab("sms")}
-                className={`px-8 py-3 font-montserrat font-medium transition-royal relative overflow-hidden ${
+                className={`flex-1 sm:flex-none px-3 sm:px-8 py-2 sm:py-3 font-montserrat font-medium transition-royal relative overflow-hidden text-xs sm:text-sm ${
                   activeTab === "sms" 
                     ? "bg-gradient-royal text-primary-foreground shadow-soft royal-glow" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
-                <MessageSquare className="w-4 h-4 mr-2" />
+                <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 SMS
               </Button>
             </div>
@@ -375,27 +376,27 @@ const Index = () => {
         <div className="max-w-4xl mx-auto animate-fade-in">
           {activeTab === "chat" && (
             <Card className="glass-card shadow-elegant elegant-hover border-border/50">
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-3xl font-playfair text-foreground mb-2">
+              <CardHeader className="text-center pb-4 sm:pb-8 px-4 sm:px-6">
+                <CardTitle className="text-xl sm:text-3xl font-playfair text-foreground mb-2">
                   Elegant Conversation
                 </CardTitle>
-                <CardDescription className="text-lg font-montserrat text-muted-foreground">
+                <CardDescription className="text-sm sm:text-lg font-montserrat text-muted-foreground">
                   Experience refined AI dialogue with royal sophistication
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
                 {/* Chat Messages Area */}
-                <div className="min-h-[400px] bg-gradient-subtle rounded-xl p-6 border border-border/30 relative overflow-hidden">
+                <div className="min-h-[300px] sm:min-h-[400px] bg-gradient-subtle rounded-xl p-3 sm:p-6 border border-border/30 relative overflow-hidden">
                   <div className="absolute inset-0 bg-pattern-dots opacity-30"></div>
                   <div className="relative z-10 h-full flex flex-col">
                     {chatMessages.length === 0 ? (
                       <div className="flex items-center justify-center h-full">
                         <div className="text-center space-y-4">
                           <div className="relative">
-                            <MessageCircle className="w-16 h-16 mx-auto text-muted-foreground/50 animate-float" />
-                            <Zap className="w-6 h-6 absolute -top-1 -right-1 text-accent animate-glow" />
+                            <MessageCircle className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground/50 animate-float" />
+                            <Zap className="w-4 h-4 sm:w-6 sm:h-6 absolute -top-1 -right-1 text-accent animate-glow" />
                           </div>
-                          <p className="text-muted-foreground font-montserrat">
+                          <p className="text-muted-foreground font-montserrat text-sm sm:text-base">
                             Start a conversation to begin your royal experience
                           </p>
                         </div>
@@ -408,13 +409,13 @@ const Index = () => {
                             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                           >
                             <div
-                              className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                              className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-3 sm:px-4 py-2 sm:py-3 ${
                                 message.sender === 'user'
                                   ? 'bg-gradient-royal text-primary-foreground'
                                   : 'bg-card/80 backdrop-blur-sm border border-border/50'
                               }`}
                             >
-                              <p className="font-montserrat text-sm">{message.text}</p>
+                              <p className="font-montserrat text-xs sm:text-sm">{message.text}</p>
                               <p className={`text-xs mt-1 ${
                                 message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'
                               }`}>
@@ -425,7 +426,7 @@ const Index = () => {
                         ))}
                         {isLoading && (
                           <div className="flex justify-start">
-                            <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl px-4 py-3">
+                            <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl px-3 sm:px-4 py-2 sm:py-3">
                               <div className="flex items-center space-x-2">
                                 <div className="w-2 h-2 bg-accent rounded-full animate-bounce"></div>
                                 <div className="w-2 h-2 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -440,7 +441,7 @@ const Index = () => {
                 </div>
                 
                 {/* Chat Input */}
-                <div className="flex space-x-4">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                   <Textarea
                     placeholder="Share your thoughts with elegant grace..."
                     value={chatMessage}
@@ -451,14 +452,14 @@ const Index = () => {
                         handleSendMessage();
                       }
                     }}
-                    className="flex-1 min-h-[80px] font-montserrat premium-input resize-none transition-royal"
+                    className="flex-1 min-h-[60px] sm:min-h-[80px] font-montserrat premium-input resize-none transition-royal text-sm"
                     disabled={isLoading}
                   />
                   <LoadingButton
                     icon={Send}
                     onAsyncClick={handleSendMessage}
                     loadingText="Sending..."
-                    className="bg-gradient-royal hover:opacity-90 text-primary-foreground shadow-elegant px-8 font-montserrat font-medium transition-royal royal-glow"
+                    className="bg-gradient-royal hover:opacity-90 text-primary-foreground shadow-elegant px-4 sm:px-8 font-montserrat font-medium transition-royal royal-glow text-sm w-full sm:w-auto"
                     disabled={!chatMessage.trim() || isLoading}
                   >
                     Send
@@ -470,31 +471,31 @@ const Index = () => {
 
           {activeTab === "image" && (
             <Card className="glass-card shadow-elegant elegant-hover border-border/50">
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-3xl font-playfair text-foreground mb-2">
+              <CardHeader className="text-center pb-4 sm:pb-8 px-4 sm:px-6">
+                <CardTitle className="text-xl sm:text-3xl font-playfair text-foreground mb-2">
                   Artistic Creation
                 </CardTitle>
-                <CardDescription className="text-lg font-montserrat text-muted-foreground">
+                <CardDescription className="text-sm sm:text-lg font-montserrat text-muted-foreground">
                   Generate exquisite imagery with royal elegance and sophistication
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
                 {/* Image Preview Area */}
-                <div className="min-h-[400px] bg-gradient-subtle rounded-xl p-6 border border-border/30 relative overflow-hidden">
+                <div className="min-h-[300px] sm:min-h-[400px] bg-gradient-subtle rounded-xl p-3 sm:p-6 border border-border/30 relative overflow-hidden">
                   <div className="absolute inset-0 bg-pattern-dots opacity-30"></div>
                   <div className="relative z-10 h-full">
                     {isGeneratingImage ? (
                       <div className="flex items-center justify-center h-full">
-                        <div className="text-center space-y-6 w-full max-w-md">
+                        <div className="text-center space-y-4 sm:space-y-6 w-full max-w-md px-4">
                           <div className="relative">
-                            <Sparkles className="w-16 h-16 mx-auto text-secondary animate-spin" />
+                            <Sparkles className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-secondary animate-spin" />
                           </div>
                           
                           {/* Progress Bar */}
                           {generationProgress && (
                             <div className="space-y-3">
-                              <div className="flex justify-between text-sm text-muted-foreground">
-                                <span>{generationProgress.stage}</span>
+                              <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
+                                <span className="truncate">{generationProgress.stage}</span>
                                 <span>{Math.round(generationProgress.progress)}%</span>
                               </div>
                               <div className="w-full bg-muted rounded-full h-2">
@@ -511,7 +512,7 @@ const Index = () => {
                             </div>
                           )}
                           
-                          <p className="text-muted-foreground font-montserrat">
+                          <p className="text-muted-foreground font-montserrat text-sm">
                             Creating your masterpiece...
                           </p>
                           
@@ -520,7 +521,7 @@ const Index = () => {
                             onClick={handleCancelGeneration}
                             variant="outline"
                             size="sm"
-                            className="mt-4"
+                            className="mt-4 text-xs sm:text-sm"
                           >
                             Cancel Generation
                           </Button>
@@ -528,49 +529,52 @@ const Index = () => {
                       </div>
                     ) : generationError ? (
                       <div className="flex items-center justify-center h-full">
-                        <div className="text-center space-y-4 max-w-md">
+                        <div className="text-center space-y-4 max-w-md px-4">
                           <div className="relative">
-                            <div className="w-16 h-16 mx-auto bg-destructive/10 rounded-full flex items-center justify-center">
-                              <span className="text-destructive text-2xl">⚠️</span>
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-destructive/10 rounded-full flex items-center justify-center">
+                              <span className="text-destructive text-xl sm:text-2xl">⚠️</span>
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <p className="text-destructive font-montserrat font-medium">
+                            <p className="text-destructive font-montserrat font-medium text-sm sm:text-base">
                               Generation Failed
                             </p>
-                            <p className="text-muted-foreground font-montserrat text-sm">
+                            <p className="text-muted-foreground font-montserrat text-xs sm:text-sm">
                               {generationError}
                             </p>
                           </div>
-                          <Button
-                            onClick={() => {
-                              setGenerationError(null);
-                              setImagePrompt("");
-                            }}
-                            variant="outline"
-                            size="sm"
-                          >
-                            Try Again
-                          </Button>
-                          {retryCount < maxRetries && (
+                          <div className="flex flex-col sm:flex-row gap-2 justify-center">
                             <Button
-                              onClick={handleRetryGeneration}
+                              onClick={() => {
+                                setGenerationError(null);
+                                setImagePrompt("");
+                              }}
                               variant="outline"
                               size="sm"
-                              className="ml-2"
+                              className="text-xs sm:text-sm"
                             >
-                              Retry
+                              Try Again
                             </Button>
-                          )}
+                            {retryCount < maxRetries && (
+                              <Button
+                                onClick={handleRetryGeneration}
+                                variant="outline"
+                                size="sm"
+                                className="text-xs sm:text-sm"
+                              >
+                                Retry
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ) : generatedImage ? (
                       <div className="flex items-center justify-center h-full">
-                        <div className="relative group">
+                        <div className="relative group w-full">
                           <img 
                             src={generatedImage} 
                             alt="Generated artwork" 
-                            className="max-w-full max-h-[350px] rounded-lg shadow-elegant object-contain"
+                            className="max-w-full max-h-[250px] sm:max-h-[350px] rounded-lg shadow-elegant object-contain mx-auto"
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <Button
@@ -580,7 +584,7 @@ const Index = () => {
                                 link.download = 'royal-studio-artwork.jpg';
                                 link.click();
                               }}
-                              className="bg-gradient-royal text-primary-foreground shadow-elegant"
+                              className="bg-gradient-royal text-primary-foreground shadow-elegant text-xs sm:text-sm"
                             >
                               Download
                             </Button>
@@ -591,10 +595,10 @@ const Index = () => {
                       <div className="flex items-center justify-center h-full">
                         <div className="text-center space-y-4">
                           <div className="relative">
-                            <Image className="w-16 h-16 mx-auto text-muted-foreground/50 animate-float" />
-                            <Sparkles className="w-6 h-6 absolute -top-1 -right-1 text-secondary animate-glow" />
+                            <Image className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground/50 animate-float" />
+                            <Sparkles className="w-4 h-4 sm:w-6 sm:h-6 absolute -top-1 -right-1 text-secondary animate-glow" />
                           </div>
-                          <p className="text-muted-foreground font-montserrat">
+                          <p className="text-muted-foreground font-montserrat text-sm sm:text-base">
                             Your masterpiece will appear here
                           </p>
                         </div>
@@ -604,7 +608,7 @@ const Index = () => {
                 </div>
                 
                 {/* Image Generation Input */}
-                <div className="flex space-x-4">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                   <Input
                     placeholder="Describe your vision with artistic detail..."
                     value={imagePrompt}
@@ -614,14 +618,14 @@ const Index = () => {
                         handleGenerateImage();
                       }
                     }}
-                    className="flex-1 font-montserrat premium-input transition-royal"
+                    className="flex-1 font-montserrat premium-input transition-royal text-sm"
                     disabled={isGeneratingImage}
                   />
                   <LoadingButton
                     icon={Sparkles}
                     onAsyncClick={handleGenerateImage}
                     loadingText="Creating..."
-                    className="bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-elegant px-8 font-montserrat font-medium transition-royal royal-glow"
+                    className="bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-elegant px-4 sm:px-8 font-montserrat font-medium transition-royal royal-glow text-sm w-full sm:w-auto"
                     disabled={!imagePrompt.trim() || isGeneratingImage}
                   >
                     Create
@@ -631,7 +635,7 @@ const Index = () => {
                 {/* Generation Tips */}
                 {!isGeneratingImage && !generatedImage && !generationError && (
                   <div className="text-center">
-                    <p className="text-xs text-muted-foreground font-montserrat">
+                    <p className="text-xs text-muted-foreground font-montserrat px-4">
                       💡 Tip: Complex prompts may take up to 4 minutes to generate. 
                       Be specific and descriptive for better results.
                     </p>
@@ -642,7 +646,7 @@ const Index = () => {
           )}
 
           {activeTab === "sms" && (
-            <div className="flex justify-center">
+            <div className="flex justify-center px-4 sm:px-0">
               <SMSForm />
             </div>
           )}
@@ -650,16 +654,16 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-20 glass-card">
-        <div className="container mx-auto px-6 py-8">
+      <footer className="border-t border-border mt-12 sm:mt-20 glass-card">
+        <div className="container mx-auto px-3 sm:px-6 py-6 sm:py-8">
           <div className="text-center space-y-4">
-            <p className="text-muted-foreground font-montserrat text-sm">
+            <p className="text-muted-foreground font-montserrat text-xs sm:text-sm">
               Crafted with premium elegance • Where technology meets royal sophistication
             </p>
             <div className="flex items-center justify-center space-x-4">
-              <div className="flex items-center space-x-2 bg-gradient-royal/10 px-4 py-2 rounded-lg border border-border/30">
-                <Crown className="h-5 w-5 text-accent animate-glow" />
-                <span className="text-sm font-montserrat font-medium text-foreground">
+              <div className="flex items-center space-x-2 bg-gradient-royal/10 px-2 sm:px-4 py-1 sm:py-2 rounded-lg border border-border/30">
+                <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-accent animate-glow" />
+                <span className="text-xs sm:text-sm font-montserrat font-medium text-foreground">
                   Co-Founder: Arun Shekhar
                 </span>
               </div>
