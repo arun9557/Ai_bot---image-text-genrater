@@ -1,10 +1,22 @@
 {
   "name": "royal-studio-chatbot",
   "version": "1.0.0",
+  "description": "Premium AI chatbot with image generation and SMS capabilities",
+  "main": "app.py",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build && cd .. && mkdir -p dist && cp -r frontend/dist/* dist/"
+    "build": "cd frontend && npm install && npm run build && cd .. && mkdir -p dist && cp -r frontend/dist/* dist/",
+    "dev": "python app.py",
+    "install": "pip install -r requirements.txt && cd frontend && npm install",
+    "start": "python app.py"
   },
+  "keywords": ["ai", "chatbot", "image-generation", "flask", "react"],
+  "author": "Arun Shekhar",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^24.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.8.0"
   }
 }

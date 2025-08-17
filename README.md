@@ -1,186 +1,243 @@
-# Royal Studio - AI Chatbot Application
+# Royal Studio - Premium AI Chatbot
 
-A full-stack chatbot application with a React frontend and Flask backend, featuring AI chat, image generation, and SMS capabilities.
+A sophisticated AI-powered chatbot application with image generation and SMS capabilities, built with Flask backend and React frontend.
 
-## Project Structure
+## ✨ Features
+
+- **🤖 AI Chat**: Intelligent conversational AI with contextual responses
+- **🎨 Image Generation**: Advanced AI image creation using Pollinations API
+- **📱 SMS Integration**: Send SMS messages via Twilio integration
+- **👑 Royal UI**: Premium, elegant user interface with royal theme
+- **🌙 Dark/Light Mode**: Toggle between themes
+- **📱 Responsive Design**: Works seamlessly on all devices
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.8+
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Chatbot-main
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm run install
+   ```
+
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` with your API keys:
+   ```env
+   # Optional: For SMS functionality
+   TWILIO_ACCOUNT_SID=your_twilio_account_sid
+   TWILIO_AUTH_TOKEN=your_twilio_auth_token
+   TWILIO_PHONE_NUMBER=your_twilio_phone_number
+   
+   # Optional: For future AI integrations
+   HUGGINGFACE_API_KEY=your_huggingface_api_key
+   ```
+
+4. **Build and Run**
+   ```bash
+   npm run build
+   npm start
+   ```
+
+The application will be available at `http://localhost:5000`
+
+## 🏗️ Project Structure
 
 ```
 Chatbot-main/
-├── app.py                 # Flask backend server
-├── requirements.txt       # Python dependencies
-├── vercel.json           # Vercel deployment configuration
-├── runtime.txt           # Python runtime specification
-├── frontend/             # React frontend application
+├── frontend/                 # React frontend application
 │   ├── src/
-│   ├── package.json
-│   └── ...
-└── static/               # Static files served by Flask
+│   │   ├── components/      # Reusable UI components
+│   │   ├── pages/           # Main application pages
+│   │   └── lib/             # Utility functions
+│   ├── public/              # Static assets
+│   └── package.json         # Frontend dependencies
+├── app.py                   # Flask backend server
+├── requirements.txt         # Python dependencies
+├── package.json            # Root package configuration
+├── vercel.json             # Vercel deployment config
+├── .env.example            # Environment variables template
+└── README.md               # Project documentation
 ```
 
-## 🚀 Quick Deploy to Vercel
+## 🛠️ Development
 
-### Option 1: Deploy with Vercel CLI
+### Backend Development
 
-1. **Install Vercel CLI:**
-   ```bash
-   npm install -g vercel
-   ```
+The Flask backend provides REST APIs for:
+- Chat conversations (`/api/chat`)
+- Image generation (`/api/generate-image`)
+- SMS messaging (`/api/send-sms`)
+- Event data (`/api/events`, `/api/hackathons`)
 
-2. **Login to Vercel:**
-   ```bash
-   vercel login
-   ```
+### Frontend Development
 
-3. **Deploy from project root:**
+Built with React, TypeScript, and Tailwind CSS:
+- Modern component architecture
+- Responsive design with royal theme
+- Real-time progress tracking for image generation
+- Advanced error handling and retry mechanisms
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run install` - Install all dependencies
+- `npm start` - Start production server
+
+## 🎨 Image Generation
+
+The image generation feature includes:
+- **Dynamic Timeouts**: 2-4 minutes based on prompt complexity
+- **Progress Tracking**: Real-time generation stages
+- **Retry Mechanism**: Automatic retry with exponential backoff
+- **Error Handling**: Context-aware error messages
+- **Complexity Detection**: Automatic prompt analysis
+
+### Prompt Complexity Levels:
+- **Low**: Simple prompts (2 minutes timeout)
+- **Medium**: Detailed prompts (3 minutes timeout)
+- **High**: Complex/photorealistic prompts (4 minutes timeout)
+
+## 📱 SMS Integration
+
+Configure Twilio credentials in `.env` to enable SMS functionality:
+- Send messages to any phone number
+- International format validation
+- Error handling and status reporting
+
+## 🚀 Deployment
+
+### Vercel Deployment
+
+The project is configured for Vercel deployment:
+
+1. **Connect to Vercel**
    ```bash
    vercel
    ```
 
-### Option 2: Deploy via GitHub
+2. **Environment Variables**
+   Add your environment variables in Vercel dashboard
 
-1. **Push your code to GitHub**
-2. **Go to [vercel.com](https://vercel.com)**
-3. **Click "New Project"**
-4. **Import your GitHub repository**
-5. **Vercel will automatically detect the configuration**
-
-### Option 3: Deploy via Vercel Dashboard
-
-1. **Go to [vercel.com](https://vercel.com)**
-2. **Click "New Project"**
-3. **Upload your project folder**
-4. **Vercel will automatically build and deploy**
-
-## Environment Variables Setup
-
-After deployment, add these environment variables in your Vercel dashboard:
-
-```
-HUGGINGFACE_API_KEY=your_huggingface_api_key_here
-TWILIO_ACCOUNT_SID=your_twilio_account_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_PHONE_NUMBER=your_twilio_phone_number
-```
-
-## Local Development Setup
-
-### Backend Setup
-
-1. **Create a virtual environment:**
+3. **Deploy**
    ```bash
-   python -m venv .venv
+   vercel --prod
    ```
 
-2. **Activate the virtual environment:**
-   - Windows:
-     ```bash
-     .venv\Scripts\activate
-     ```
-   - macOS/Linux:
-     ```bash
-     source .venv/bin/activate
-     ```
+### Manual Deployment
 
-3. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Create a .env file:**
-   Create a `.env` file in the root directory with:
-   ```
-   HUGGINGFACE_API_KEY=your_huggingface_api_key_here
-   PORT=5000
-   FLASK_ENV=development
-   
-   # Twilio SMS Configuration (Optional)
-   TWILIO_ACCOUNT_SID=your_twilio_account_sid
-   TWILIO_AUTH_TOKEN=your_twilio_auth_token
-   TWILIO_PHONE_NUMBER=your_twilio_phone_number
-   ```
-
-5. **Run the backend server:**
-   ```bash
-   python app.py
-   ```
-   The backend will run on `http://localhost:5000`
-
-### Frontend Setup
-
-1. **Navigate to the frontend directory:**
-   ```bash
-   cd frontend
-   ```
-
-2. **Install Node.js dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Build the frontend:**
+1. **Build the project**
    ```bash
    npm run build
    ```
 
-4. **For development (optional):**
-   ```bash
-   npm run dev
-   ```
+2. **Deploy the built files**
+   - Backend: Deploy `app.py` with Python runtime
+   - Frontend: Deploy `dist/` folder as static files
 
-## Features
+## 🔧 Configuration
 
-- **Chat Interface**: Interactive chat with AI assistant
-- **Event Management**: View and manage events/hackathons
-- **Image Generation**: Generate images using AI with enhanced timeout handling
-- **SMS Messaging**: Send SMS messages using Twilio integration
-- **Modern UI**: Built with React, TypeScript, and Tailwind CSS
-- **Responsive Design**: Works on desktop and mobile devices
-- **Enhanced UX**: Progress tracking, error handling, and retry mechanisms
+### Environment Variables
 
-## API Endpoints
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `TWILIO_ACCOUNT_SID` | No | Twilio account SID for SMS |
+| `TWILIO_AUTH_TOKEN` | No | Twilio auth token for SMS |
+| `TWILIO_PHONE_NUMBER` | No | Twilio phone number for SMS |
+| `HUGGINGFACE_API_KEY` | No | HuggingFace API key (future use) |
+| `PORT` | No | Server port (default: 5000) |
 
-- `GET /api/events` - Get list of events
-- `GET /api/hackathons` - Get list of hackathons
-- `POST /api/chat` - Send chat messages
-- `POST /api/generate-image` - Generate images
-- `POST /api/send-sms` - Send SMS messages
-- `GET /api/sms-status` - Check SMS service status
+## 🎯 API Endpoints
 
-## Development
+### Chat API
+```http
+POST /api/chat
+Content-Type: application/json
 
-The application uses:
-- **Backend**: Flask with CORS support
-- **Frontend**: React with TypeScript, Vite, and Tailwind CSS
-- **UI Components**: Shadcn/ui components
-- **Styling**: Tailwind CSS with custom design system
+{
+  "message": "Hello, how are you?"
+}
+```
 
-## Running the Application Locally
+### Image Generation API
+```http
+POST /api/generate-image
+Content-Type: application/json
 
-1. Start the backend server (from root directory):
-   ```bash
-   python app.py
-   ```
+{
+  "prompt": "A beautiful landscape",
+  "width": 1024,
+  "height": 1024,
+  "seed": 42
+}
+```
 
-2. Build the frontend (from frontend directory):
-   ```bash
-   cd frontend
-   npm run build
-   ```
+### SMS API
+```http
+POST /api/send-sms
+Content-Type: application/json
 
-3. Access the application at `http://localhost:5000`
+{
+  "to": "+1234567890",
+  "message": "Hello from Royal Studio!"
+}
+```
 
-The Flask server will serve the built frontend files automatically.
+## 🐛 Troubleshooting
 
-## Deployment Notes
+### Common Issues
 
-- The application is configured for Vercel deployment
-- Frontend builds automatically during deployment
-- API routes are properly configured for serverless functions
-- Environment variables can be set in Vercel dashboard
-- Static files are served from the frontend/dist directory
+1. **Build Failures**
+   - Ensure Node.js 18+ is installed
+   - Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
 
-## Credits
+2. **Image Generation Timeouts**
+   - Complex prompts may take up to 4 minutes
+   - Try simplifying prompts for faster results
+   - Check internet connection stability
 
-**Co-Founder: Arun Shekhar**
+3. **SMS Not Working**
+   - Verify Twilio credentials in `.env`
+   - Check phone number format (must include country code)
+   - Ensure Twilio account has sufficient balance
 
-Crafted with premium elegance • Where technology meets royal sophistication
+## 👨‍💻 Author
+
+**Arun Shekhar**
+- Co-Founder & Developer
+- Premium AI Solutions
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📞 Support
+
+For support and questions, please open an issue in the repository or contact the development team.
+
+---
+
+*Crafted with premium elegance • Where technology meets royal sophistication*

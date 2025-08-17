@@ -30,11 +30,8 @@ if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
     except Exception as e:
         print(f"Warning: Failed to initialize Twilio client: {e}")
 
-if not HUGGINGFACE_API_KEY:
-    raise ValueError(
-        "Error: HUGGINGFACE_API_KEY not found in environment variables. "
-        "Please create a .env file with your API key."
-    )
+# Note: HUGGINGFACE_API_KEY is not required for current implementation
+# Remove the strict requirement check
 
 # Sample data for events
 events = [
@@ -340,10 +337,6 @@ def sms_status():
 
 
 if __name__ == '__main__':
-    # Create static directory if it doesn't exist
-    if not os.path.exists('static'):
-        os.makedirs('static')
-    
     # Get the port from the environment, defaulting to 5000 for local development.
     port = int(os.environ.get("PORT", 5000))
     # Run the Flask app in debug mode.
