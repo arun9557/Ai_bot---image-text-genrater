@@ -86,42 +86,170 @@ def not_found(_):
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    """Handle chat interactions."""
+    """Handle chat interactions using HuggingFace API."""
     try:
         data = request.get_json()
-        user_message = data.get('message', '').lower().strip()
+        user_message = data.get('message', '').strip()
         
         if not user_message:
             return jsonify({"error": "No message provided"}), 400
 
-        # Simple response logic based on keywords
-        if any(word in user_message for word in ['hello', 'hi', 'hey', 'namaste']):
-            response = "Hello! Welcome to Royal Studio. How can I assist you today? You can ask me questions, generate images, or send SMS messages."
-        elif any(word in user_message for word in ['help', 'what can you do', 'features']):
-            response = "I can help you with:\n• Chat conversations\n• Image generation\n• SMS messaging\n• Event information\n\nWhat would you like to try?"
-        elif any(word in user_message for word in ['image', 'picture', 'generate', 'create']):
-            response = "To generate images, please go to the 'Image Generator' tab above. You can describe what you want to create!"
-        elif any(word in user_message for word in ['sms', 'message', 'text', 'phone']):
-            response = "To send SMS messages, please go to the 'SMS' tab above. You'll need to configure Twilio credentials first."
-        elif any(word in user_message for word in ['event', 'hackathon', 'conference']):
-            response = "I can show you upcoming events and hackathons! Check out the events section for more details."
-        elif any(word in user_message for word in ['thank', 'thanks']):
-            response = "You're welcome! I'm here to help. Feel free to ask me anything else."
-        elif any(word in user_message for word in ['bye', 'goodbye', 'exit']):
-            response = "Goodbye! Have a wonderful day. Come back anytime for more royal experiences!"
-        else:
-            response = "That's an interesting question! I'm a simple AI assistant. You can ask me about features, generate images, or send SMS messages. What would you like to know more about?"
+        # Check if HuggingFace API key is available
+        if not HUGGINGFACE_API_KEY or HUGGINGFACE_API_KEY == "your_huggingface_api_key_here":
+            # Fallback to manual responses if no API key
+            return get_manual_response(user_message)
         
-        return jsonify({"response": response})
+        # Use HuggingFace API for intelligent responses
+        try:
+            headers = {
+                "Authorization": f"Bearer {HUGGINGFACE_API_KEY}",
+                "Content-Type": "application/json"
+            }
             
-    except requests.exceptions.RequestException as e:
-        return jsonify({
-            "error": "Failed to connect to AI service",
-            "details": str(e)
-        }), 500
+            # Using Microsoft DialoGPT for conversational AI
+            api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+            
+            payload = {
+                "inputs": user_message,
+                "parameters": {
+                    "max_length": 100,
+                    "temperature": 0.7,
+                    "do_sample": True,
+                    "pad_token_id": 50256
+                }
+            }
+            
+            response = requests.post(api_url, headers=headers, json=payload, timeout=10)
+            
+            if response.status_code == 200:
+                result = response.json()
+                if isinstance(result, list) and len(result) > 0:
+                    ai_response = result[0].get('generated_text', '').strip()
+                    
+                    # Clean up the response
+                    if ai_response.startswith(user_message):
+                        ai_response = ai_response[len(user_message):].strip()
+                    
+                    # Add Royal Studio context to responses
+                    if ai_response:
+                        # Enhance response with Royal Studio branding
+                        if any(word in user_message.lower() for word in ['hello', 'hi', 'hey']):
+                            ai_response = f"Hello! I'm your Royal Studio AI assistant. {ai_response}"
+                        elif any(word in user_message.lower() for word in ['help', 'what can you do']):
+                            ai_response = f"{ai_response}\n\nI can also help you with image generation and SMS messaging through Royal Studio!"
+                        
+                        return jsonify({"response": ai_response})
+                
+            # If HuggingFace API fails, fallback to manual responses
+            return get_manual_response(user_message)
+            
+        except requests.exceptions.Timeout:
+            print("HuggingFace API timeout, falling back to manual responses")
+            return get_manual_response(user_message)
+        except requests.exceptions.RequestException as e:
+            print(f"HuggingFace API error: {str(e)}, falling back to manual responses")
+            return get_manual_response(user_message)
+            
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+def get_manual_response(user_message):
+    """Fallback manual responses when HuggingFace API is not available."""
+    user_message_lower = user_message.lower().strip()
+    
+    # Enhanced response logic with more variety
+    if any(word in user_message_lower for word in ['hello', 'hi', 'hey', 'namaste']):
+        responses = [
+            "Hello! Welcome to Royal Studio. How can I assist you today? You can ask me questions, generate images, or send SMS messages.",
+            "Hi there! I'm your Royal Studio AI assistant. What would you like to explore today?",
+            "Namaste! Welcome to the royal experience. How may I serve you today?",
+            "Greetings! Ready to create something amazing together?"
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    elif any(word in user_message_lower for word in ['help', 'what can you do', 'features']):
+        response = "I can help you with:\n• Chat conversations\n• Image generation\n• SMS messaging\n• Event information\n\nWhat would you like to try?"
+        
+    elif any(word in user_message_lower for word in ['name', 'who are you', 'what are you']):
+        responses = [
+            "I'm your Royal Studio AI assistant, created by Arun Shekhar. I'm here to help with chat, images, and SMS!",
+            "I'm the Royal Studio AI - your premium digital companion for creative tasks and conversations.",
+            "I'm an AI assistant built for Royal Studio. I can chat, generate images, and send SMS messages!"
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    elif any(word in user_message_lower for word in ['image', 'picture', 'generate', 'create', 'draw', 'art']):
+        responses = [
+            "To generate images, please go to the 'Image Generator' tab above. You can describe what you want to create!",
+            "I can create amazing images for you! Switch to the Image Generator tab and describe your vision.",
+            "Ready to create some art? Head to the Image Generator tab and let your imagination flow!"
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    elif any(word in user_message_lower for word in ['sms', 'message', 'text', 'phone']):
+        response = "To send SMS messages, please go to the 'SMS' tab above. You'll need to configure Twilio credentials first."
+        
+    elif any(word in user_message_lower for word in ['event', 'hackathon', 'conference']):
+        response = "I can show you upcoming events and hackathons! Check out the events section for more details."
+        
+    elif any(word in user_message_lower for word in ['thank', 'thanks', 'appreciate']):
+        responses = [
+            "You're welcome! I'm here to help. Feel free to ask me anything else.",
+            "My pleasure! Happy to assist you anytime.",
+            "Glad I could help! What else can I do for you?",
+            "You're most welcome! I'm always here for your royal experience."
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    elif any(word in user_message_lower for word in ['bye', 'goodbye', 'exit', 'see you']):
+        responses = [
+            "Goodbye! Have a wonderful day. Come back anytime for more royal experiences!",
+            "Farewell! It was great chatting with you. See you soon!",
+            "Take care! Thanks for visiting Royal Studio. Until next time!",
+            "Goodbye! May your day be filled with creativity and joy!"
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    elif any(word in user_message_lower for word in ['how', 'why', 'what', 'when', 'where']):
+        responses = [
+            "That's a great question! I'm here to help with Royal Studio features. Would you like to know about chat, image generation, or SMS?",
+            "Interesting question! I can assist with various tasks. What specific feature would you like to explore?",
+            "I'd love to help answer that! Tell me more about what you're looking for - images, messages, or just a chat?",
+            "Good question! I'm designed to help with creative tasks and conversations. What can I help you with today?"
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    elif any(word in user_message_lower for word in ['arun', 'developer', 'creator', 'maker']):
+        responses = [
+            "Arun Shekhar is the brilliant mind behind Royal Studio! He's created this premium AI experience for you.",
+            "Yes, Arun Shekhar is my creator and the co-founder of Royal Studio. He's built something amazing here!",
+            "Arun Shekhar developed this entire Royal Studio platform. Pretty impressive, right?"
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    elif any(word in user_message_lower for word in ['good', 'nice', 'awesome', 'cool', 'amazing']):
+        responses = [
+            "Thank you! I'm glad you're enjoying Royal Studio. What would you like to try next?",
+            "That's wonderful to hear! I'm here to make your experience even better.",
+            "I'm so happy you like it! Royal Studio is designed to impress. What shall we do next?",
+            "Fantastic! Your enthusiasm makes my day. How can I help you further?"
+        ]
+        response = responses[hash(user_message) % len(responses)]
+        
+    else:
+        # More varied fallback responses
+        fallback_responses = [
+            "That's interesting! I'm your Royal Studio AI assistant. I can help with chat, image generation, or SMS. What would you like to explore?",
+            "I'd love to help you with that! I specialize in conversations, creating images, and sending messages. Which interests you?",
+            "Great question! As your Royal Studio assistant, I can chat, generate amazing images, or help with SMS. What sounds fun?",
+            "I'm here to assist! Whether you want to chat, create art, or send messages - I've got you covered. What's your preference?",
+            "Fascinating! I'm designed to help with various tasks at Royal Studio. Would you like to try image generation, SMS, or just continue chatting?"
+        ]
+        response = fallback_responses[hash(user_message) % len(fallback_responses)]
+    
+    return jsonify({"response": response})
 
 
 @app.route('/api/events', methods=['GET'])
