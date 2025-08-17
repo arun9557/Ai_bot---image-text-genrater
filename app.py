@@ -22,6 +22,13 @@ TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 
+# Debug: Print API key status (without exposing the actual key)
+if HUGGINGFACE_API_KEY:
+    print(f"✅ HuggingFace API key loaded: {HUGGINGFACE_API_KEY[:8]}...")
+else:
+    print("❌ HuggingFace API key not found in environment variables")
+    print("💡 Please set HUGGINGFACE_API_KEY in your .env file")
+
 # Initialize Twilio client if credentials are available
 twilio_client = None
 if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
@@ -106,41 +113,56 @@ def chat():
                 "Content-Type": "application/json"
             }
             
-            # Using Microsoft DialoGPT for conversational AI
-            api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+            # Using a more reliable conversational model
+            api_url = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
             
             payload = {
                 "inputs": user_message,
                 "parameters": {
-                    "max_length": 100,
+                    "max_new_tokens": 100,
                     "temperature": 0.7,
                     "do_sample": True,
-                    "pad_token_id": 50256
+                    "return_full_text": False
                 }
             }
             
-            response = requests.post(api_url, headers=headers, json=payload, timeout=10)
+            print(f"Calling HuggingFace API with message: {user_message}")
+            response = requests.post(api_url, headers=headers, json=payload, timeout=15)
+            print(f"HuggingFace API response status: {response.status_code}")
             
             if response.status_code == 200:
                 result = response.json()
+                print(f"HuggingFace API result: {result}")
+                
                 if isinstance(result, list) and len(result) > 0:
                     ai_response = result[0].get('generated_text', '').strip()
-                    
-                    # Clean up the response
-                    if ai_response.startswith(user_message):
-                        ai_response = ai_response[len(user_message):].strip()
-                    
-                    # Add Royal Studio context to responses
-                    if ai_response:
-                        # Enhance response with Royal Studio branding
-                        if any(word in user_message.lower() for word in ['hello', 'hi', 'hey']):
-                            ai_response = f"Hello! I'm your Royal Studio AI assistant. {ai_response}"
-                        elif any(word in user_message.lower() for word in ['help', 'what can you do']):
-                            ai_response = f"{ai_response}\n\nI can also help you with image generation and SMS messaging through Royal Studio!"
-                        
-                        return jsonify({"response": ai_response})
+                elif isinstance(result, dict) and 'generated_text' in result:
+                    ai_response = result['generated_text'].strip()
+                else:
+                    print("Unexpected API response format, falling back to manual responses")
+                    return get_manual_response(user_message)
                 
-            # If HuggingFace API fails, fallback to manual responses
+                if ai_response and ai_response != user_message:
+                    # Add Royal Studio context to responses
+                    if any(word in user_message.lower() for word in ['hello', 'hi', 'hey']):
+                        ai_response = f"Hello! I'm your Royal Studio AI assistant. {ai_response}"
+                    elif any(word in user_message.lower() for word in ['help', 'what can you do']):
+                        ai_response = f"{ai_response}\n\nI can also help you with image generation and SMS messaging through Royal Studio!"
+                    elif any(word in user_message.lower() for word in ['name', 'who are you']):
+                        ai_response = f"I'm your Royal Studio AI assistant created by Arun Shekhar. {ai_response}"
+                    
+                    print(f"Returning AI response: {ai_response}")
+                    return jsonify({"response": ai_response})
+                
+            elif response.status_code == 503:
+                print("HuggingFace model is loading, falling back to manual responses")
+                return get_manual_response(user_message)
+            else:
+                print(f"HuggingFace API error {response.status_code}: {response.text}")
+                return get_manual_response(user_message)
+            
+            # If we reach here, fallback to manual responses
+            print("No valid AI response generated, falling back to manual responses")
             return get_manual_response(user_message)
             
         except requests.exceptions.Timeout:
@@ -148,6 +170,9 @@ def chat():
             return get_manual_response(user_message)
         except requests.exceptions.RequestException as e:
             print(f"HuggingFace API error: {str(e)}, falling back to manual responses")
+            return get_manual_response(user_message)
+        except Exception as e:
+            print(f"Unexpected error in HuggingFace API call: {str(e)}, falling back to manual responses")
             return get_manual_response(user_message)
             
     except Exception as e:
