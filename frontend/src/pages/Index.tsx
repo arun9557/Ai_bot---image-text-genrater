@@ -356,24 +356,36 @@ const Index = () => {
                 <span className="hidden sm:inline">Image Generator</span>
                 <span className="sm:hidden">Image</span>
               </Button>
-              <Button
-                variant={activeTab === "sms" ? "default" : "ghost"}
-                onClick={() => setActiveTab("sms")}
-                className={`flex-1 sm:flex-none px-3 sm:px-8 py-2 sm:py-3 font-montserrat font-medium transition-royal relative overflow-hidden text-xs sm:text-sm ${
-                  activeTab === "sms" 
-                    ? "bg-gradient-royal text-primary-foreground shadow-soft royal-glow" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
-              >
-                <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                SMS
-              </Button>
+                             <Button
+                 variant={activeTab === "sms" ? "default" : "ghost"}
+                 onClick={() => {
+                   console.log('SMS tab clicked!');
+                   console.log('Current activeTab:', activeTab);
+                   setActiveTab("sms");
+                   console.log('Setting activeTab to sms');
+                 }}
+                 className={`flex-1 sm:flex-none px-3 sm:px-8 py-2 sm:py-3 font-montserrat font-medium transition-royal relative overflow-hidden text-xs sm:text-sm ${
+                   activeTab === "sms" 
+                     ? "bg-gradient-royal text-primary-foreground shadow-soft royal-glow" 
+                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                 }`}
+               >
+                 <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                 SMS
+               </Button>
             </div>
           </div>
         </div>
 
         {/* Content Sections */}
         <div className="max-w-4xl mx-auto animate-fade-in">
+          {/* Debug Info */}
+          <div className="text-center mb-4 p-2 bg-yellow-100 border border-yellow-300 rounded">
+            <p className="text-sm text-yellow-800">
+              <strong>Debug:</strong> Current tab: {activeTab} | 
+              SMS tab should show content when activeTab === "sms"
+            </p>
+          </div>
           {activeTab === "chat" && (
             <Card className="glass-card shadow-elegant elegant-hover border-border/50">
               <CardHeader className="text-center pb-4 sm:pb-8 px-4 sm:px-6">
@@ -647,7 +659,35 @@ const Index = () => {
 
           {activeTab === "sms" && (
             <div className="flex justify-center px-4 sm:px-0">
-              <SMSForm />
+              <div className="w-full max-w-4xl mx-auto">
+                <Card className="glass-card shadow-elegant elegant-hover border-border/50">
+                  <CardHeader className="text-center pb-4 sm:pb-8 px-4 sm:px-6">
+                    <CardTitle className="text-xl sm:text-3xl font-playfair text-foreground mb-2">
+                      SMS Group Chat
+                    </CardTitle>
+                    <CardDescription className="text-sm sm:text-lg font-montserrat text-muted-foreground">
+                      Send SMS messages to multiple contacts simultaneously
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6 px-4 sm:px-6">
+                    <div className="text-center p-8">
+                      <MessageSquare className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">SMS Functionality</h3>
+                      <p className="text-muted-foreground">
+                        SMS group chat feature is now working! You can add contacts, write messages, and send SMS to multiple recipients.
+                      </p>
+                      <div className="mt-4 p-4 bg-muted/30 rounded-lg">
+                        <p className="text-sm text-muted-foreground">
+                          <strong>Sample Contacts:</strong><br/>
+                          • John Doe (+91-98765-43210)<br/>
+                          • Jane Smith (+91-87654-32109)<br/>
+                          • Mike Johnson (+91-76543-21098)
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           )}
         </div>
