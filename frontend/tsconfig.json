@@ -10,6 +10,7 @@
       "@/*": ["./src/*"]
     },
     "noImplicitAny": false,
+    "types": ["react", "react-dom", "vite/client"],
     "noUnusedParameters": false,
     "skipLibCheck": true,
     "allowJs": true,
