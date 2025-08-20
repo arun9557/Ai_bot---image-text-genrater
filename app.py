@@ -477,6 +477,99 @@ def send_sms():
         }), 500
 
 
+@app.route('/api/send-sms-bulk', methods=['POST'])
+def send_sms_bulk():
+    """
+    API endpoint to send SMS messages to multiple recipients using Twilio.
+
+    Expected JSON payload:
+    {
+        "to": ["+1234567890", "+1987654321"],
+        "message": "Hello from your chatbot!"
+    }
+    """
+    try:
+        if not twilio_client:
+            return jsonify({
+                "status": "error",
+                "error": "SMS service not configured. Please add Twilio credentials to .env file."
+            }), 500
+
+        data = request.get_json() or {}
+        to_numbers = data.get('to', [])
+        message_text = data.get('message', '')
+
+        # Allow single string as well
+        if isinstance(to_numbers, str):
+            to_numbers = [to_numbers]
+
+        if not isinstance(to_numbers, list) or len(to_numbers) == 0 or not message_text:
+            return jsonify({
+                "status": "error",
+                "error": "Provide a non-empty 'message' and at least one recipient in 'to'"
+            }), 400
+
+        def normalize_phone(number: str) -> str:
+            # Remove spaces, dashes, parentheses
+            cleaned = ''.join(ch for ch in number.strip() if ch.isdigit() or ch == '+')
+            # Ensure leading '+' and at least country code + number length
+            if not cleaned.startswith('+'):
+                # If the number starts with country code digits (common in copies), reject to avoid wrong sends
+                return ''
+            return cleaned
+
+        results = []
+        success_count = 0
+
+        for raw_number in to_numbers:
+            normalized = normalize_phone(str(raw_number))
+            if not normalized:
+                results.append({
+                    "to": raw_number,
+                    "status": "error",
+                    "error": "Invalid number format. Use international format like +1234567890"
+                })
+                continue
+
+            try:
+                message = twilio_client.messages.create(
+                    body=message_text,
+                    from_=TWILIO_PHONE_NUMBER,
+                    to=normalized
+                )
+                results.append({
+                    "to": normalized,
+                    "status": "success",
+                    "sid": message.sid
+                })
+                success_count += 1
+            except TwilioRestException as e:
+                results.append({
+                    "to": normalized,
+                    "status": "error",
+                    "error": str(e)
+                })
+            except Exception as e:
+                results.append({
+                    "to": normalized,
+                    "status": "error",
+                    "error": str(e)
+                })
+
+        return jsonify({
+            "status": "partial-success" if success_count != len(results) else "success",
+            "sent": success_count,
+            "total": len(results),
+            "results": results
+        })
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "error": "An unexpected error occurred",
+            "details": str(e)
+        }), 500
+
 @app.route('/api/sms-status', methods=['GET'])
 def sms_status():
     """

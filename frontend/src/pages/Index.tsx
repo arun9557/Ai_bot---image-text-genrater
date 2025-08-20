@@ -660,33 +660,7 @@ const Index = () => {
           {activeTab === "sms" && (
             <div className="flex justify-center px-4 sm:px-0">
               <div className="w-full max-w-4xl mx-auto">
-                <Card className="glass-card shadow-elegant elegant-hover border-border/50">
-                  <CardHeader className="text-center pb-4 sm:pb-8 px-4 sm:px-6">
-                    <CardTitle className="text-xl sm:text-3xl font-playfair text-foreground mb-2">
-                      SMS Group Chat
-                    </CardTitle>
-                    <CardDescription className="text-sm sm:text-lg font-montserrat text-muted-foreground">
-                      Send SMS messages to multiple contacts simultaneously
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6 px-4 sm:px-6">
-                    <div className="text-center p-8">
-                      <MessageSquare className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">SMS Functionality</h3>
-                      <p className="text-muted-foreground">
-                        SMS group chat feature is now working! You can add contacts, write messages, and send SMS to multiple recipients.
-                      </p>
-                      <div className="mt-4 p-4 bg-muted/30 rounded-lg">
-                        <p className="text-sm text-muted-foreground">
-                          <strong>Sample Contacts:</strong><br/>
-                          • John Doe (+91-98765-43210)<br/>
-                          • Jane Smith (+91-87654-32109)<br/>
-                          • Mike Johnson (+91-76543-21098)
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <SMSForm />
               </div>
             </div>
           )}
