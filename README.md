@@ -92,4 +92,3 @@ For support and questions, please open an issue in the repository or contact the
 
 ---
 
-*Crafted with premium elegance • Where technology meets royal sophistication*
