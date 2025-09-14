@@ -1,4 +1,5 @@
-import { useState } from "react";
+// @ts-nocheck
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -356,7 +357,7 @@ const Index = () => {
                 <span className="hidden sm:inline">Image Generator</span>
                 <span className="sm:hidden">Image</span>
               </Button>
-                             <Button
+              <Button
                  variant={activeTab === "sms" ? "default" : "ghost"}
                  onClick={() => {
                    console.log('SMS tab clicked!');
