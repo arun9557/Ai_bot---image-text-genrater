@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arun Shekhar — Personal AI Assistant</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        :root {
+            /* Color System */
+            --primary: #8a70ff; /* Lavender */
+            --primary-light: #b099ff;
+            --accent: #58ebd3; /* Cyan/Teal */
+            --bg-page: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: rgba(226, 232, 240, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 40px rgba(138, 112, 255, 0.12);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Reset & Base */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Ambient Background */
+        .mesh-gradient {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                radial-gradient(circle at 40% 40%, rgba(138, 112, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 60% 60%, rgba(88, 235, 211, 0.1) 0%, transparent 40%);
+            z-index: -2;
+            animation: rotateBg 30s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dashboard Container */
+        .wrapper {
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            z-index: 10;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 0; }
+
+        .profile-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .profile-image-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+            border-radius: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 3px;
+            box-shadow: 0 10px 25px rgba(138, 112, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 38px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        .profile-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            background: rgba(138, 112, 255, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .profile-name { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+        .profile-role { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+        .nav-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
+        .nav-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; padding-left: 12px; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover { background: white; color: var(--primary); transform: translateX(4px); }
+        .nav-item.active { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(138, 112, 255, 0.25); }
+
+        .status-card {
+            margin-top: auto;
+            background: white;
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .status-item { display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 8px; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+
+        /* Chat Container */
+        .chat-container {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chat-header {
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .chat-title-group { display: flex; align-items: center; gap: 16px; }
+        .chat-ai-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .chat-name { font-size: 18px; font-weight: 800; }
+        .chat-status { font-size: 13px; color: var(--text-muted); }
+
+        .messages-list {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message { max-width: 80%; display: flex; gap: 14px; animation: messageSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes messageSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .bot-message { align-self: flex-start; }
+        .user-message { align-self: flex-end; flex-direction: row-reverse; }
+
+        .msg-avatar { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; background: white; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .bot-message .msg-avatar { background: var(--primary); color: white; border: none; }
+        .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .msg-bubble { padding: 16px 20px; border-radius: 20px; font-size: 15px; line-height: 1.6; position: relative; border: 1px solid var(--border); }
+        .bot-message .msg-bubble { background: white; border-bottom-left-radius: 4px; }
+        .user-message .msg-bubble { background: var(--primary); color: white; border-bottom-right-radius: 4px; border: none; }
+
+        .quick-prompts { padding: 12px 32px; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+        .prompt-pill { padding: 8px 18px; background: white; border: 1px solid var(--border); border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: var(--transition); white-space: nowrap; }
+        .prompt-pill:hover { border-color: var(--primary); color: var(--primary); }
+
+        .chat-input-area { padding: 24px 32px 32px; background: rgba(255, 255, 255, 0.6); }
+        .input-wrapper { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); }
+        input { flex: 1; border: none; outline: none; font-family: 'Outfit', sans-serif; font-size: 15px; }
+        .send-btn { width: 48px; height: 48px; border-radius: 16px; background: var(--primary); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .send-btn:hover { background: var(--primary-light); transform: scale(1.05); }
+
+        @media (max-width: 900px) { .wrapper { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+
+<div class="mesh-gradient"></div>
+
+<div class="wrapper">
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-badge">AI Assistant</div>
+            <div class="profile-image-container">
+                <div class="profile-image">
+                    <img src="static/images/avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Arun'">
+                </div>
+            </div>
+            <h1 class="profile-name">Arun Shekhar</h1>
+            <p class="profile-role">Cybersecurity · AI Researcher</p>
+        </div>
+
+        <div class="nav-label">Portfolios</div>
+        <nav class="nav-group">
+            <a href="https://arunshekhar.me" class="nav-item active" target="_blank"><i data-lucide="layout"></i> Main Site</a>
+            <a href="https://arunshekhar.me/#projects" class="nav-item" target="_blank"><i data-lucide="rocket"></i> Projects</a>
+            <a href="https://arunshekhar.me/cybersecurity" class="nav-item" target="_blank"><i data-lucide="shield-check"></i> Security</a>
+            <a href="https://arunshekhar.me/ai" class="nav-item" target="_blank"><i data-lucide="cpu"></i> AI Work</a>
+        </nav>
+
+        <div class="status-card">
+            <div class="status-item"><span class="status-label">Network</span><span class="status-value"><span class="status-dot"></span> Online</span></div>
+            <div class="status-item"><span class="status-label">Location</span><span class="status-value">India</span></div>
+        </div>
+    </aside>
+
+    <main class="chat-container">
+        <header class="chat-header">
+            <div class="chat-title-group">
+                <div class="chat-ai-icon"><i data-lucide="bot"></i></div>
+                <div><h2 class="chat-name">Arun's AI</h2><p class="chat-status">Ask me about Arun's work.</p></div>
+            </div>
+        </header>
+
+        <div class="messages-list" id="chatList">
+            <div class="message bot-message">
+                <div class="msg-avatar"><img src="static/images/avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Arun'"></div>
+                <div class="msg-content">
+                    <div class="msg-bubble">Hello! I'm Arun's personal AI. I can tell you about his <strong>projects</strong>, his <strong>cybersecurity expertise</strong>, or his <strong>AI research</strong>. What's on your mind?</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-prompts">
+            <div class="prompt-pill" onclick="quickAsk('Who is Arun Shekhar?')">👤 Who is Arun?</div>
+            <div class="prompt-pill" onclick="quickAsk('Top Projects')">🚀 Projects</div>
+            <div class="prompt-pill" onclick="quickAsk('Security Skills')">🔐 Security</div>
+            <div class="prompt-pill" onclick="quickAsk('AI Research')">🤖 AI Work</div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="Type here..." onkeypress="handleEnter(event)">
+                <button class="send-btn" onclick="sendMessage()"><i data-lucide="send"></i></button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    lucide.createIcons();
+    const chatList = document.getElementById('chatList');
+    const userInput = document.getElementById('userInput');
+
+    const DATA = {
+        about: "Arun Shekhar is a **Cybersecurity Engineer** and **AI/ML Researcher** from India. He builds innovative tools at the junction of security and AI.\n\n[Full Portfolio](https://arunshekhar.me)",
+        projects: "Key projects include **Royal Studio** (AI platform) and various **security automation tools**. Check them out here: [Projects](https://arunshekhar.me/#projects)",
+        security: "Expert in **penetration testing**, ethical hacking, and web security. Core tools: **Kali, Burp Suite, Metasploit**.",
+        ai: "Focuses on **LLM integrations**, AI agents, and deep learning. [AI Portfolio](https://arunshekhar.me/ai)"
+    };
+
+    function addMessage(text, isUser = false) {
+        const msg = document.createElement('div');
+        msg.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        msg.innerHTML = `
+            <div class="msg-avatar">${isUser ? '<i data-lucide="user"></i>' : '<img src="static/images/avatar.png" onerror="this.src=\'https://api.dicebear.com/7.x/bottts/svg?seed=Arun\'">'}</div>
+            <div class="msg-content"><div class="msg-bubble">${formatText(text)}</div></div>
+        `;
+        chatList.appendChild(msg);
+        lucide.createIcons();
+        chatList.scrollTop = chatList.scrollHeight;
+    }
+
+    function formatText(t) {
+        return t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" style="color:var(--primary);font-weight:700">$1</a>').replace(/\n/g, '<br>');
+    }
+
+    function sendMessage() {
+        const t = userInput.value.trim(); if (!t) return;
+        userInput.value = ''; addMessage(t, true);
+        setTimeout(() => {
+            let r = "I recommend checking Arun's [Portfolio](https://arunshekhar.me) for more details.";
+            if (t.toLowerCase().includes('who')) r = DATA.about;
+            else if (t.toLowerCase().includes('project')) r = DATA.projects;
+            else if (t.toLowerCase().includes('security')) r = DATA.security;
+            else if (t.toLowerCase().includes('ai')) r = DATA.ai;
+            addMessage(r);
+        }, 600);
+    }
+
+    function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
+    function quickAsk(t) { userInput.value = t; sendMessage(); }
+</script>
+</body>
+</html>
