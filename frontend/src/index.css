@@ -2,86 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* New Aesthetic: Lavender & Cyan */
-    --background: 210 40% 98%; /* Soft off-white */
-    --foreground: 222 47% 11%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-
-    --primary: 255 100% 72%; /* Lavender #8a70ff -> hsl(255, 100%, 72%) approx */
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 172 77% 63%; /* Cyan/Teal #58ebd3 -> hsl(172, 77%, 63%) */
-    --secondary-foreground: 222 47% 11%;
-
-    --muted: 210 40% 90%;
-    --muted-foreground: 215 16% 47%;
-
-    --accent: 172 77% 63%;
-    --accent-foreground: 222 47% 11%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 255 100% 72%;
-
-    --radius: 1.5rem;
-  }
-
-  .dark {
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 255 100% 72%;
-    --primary-foreground: 222 47% 11%;
-
-    --secondary: 172 77% 63%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 32% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 172 77% 63%;
-    --accent-foreground: 210 40% 98%;
-
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 255 100% 72%;
-  }
+:root {
+  --primary: #8a70ff;
+  --bg-page: #f8fafc;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+body {
+  font-family: 'Outfit', sans-serif;
+  @apply bg-[#f8fafc] text-[#1e293b];
 }
 
-@layer components {
-  .glass-panel {
-    @apply bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-xl;
-  }
-  
-  .mesh-bg {
-    background-image: 
-      radial-gradient(circle at 10% 20%, hsl(var(--primary) / 0.1) 0%, transparent 40%),
-      radial-gradient(circle at 90% 80%, hsl(var(--secondary) / 0.1) 0%, transparent 40%);
-  }
-}
+/* Custom Mesh Gradient Background */
+.mesh-gradient-bg {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    radial-gradient(circle at 40% 40%, rgba(138, 112, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 60% 60%, rgba(88, 235, 211, 0.08) 0%, transparent 40%);
+  z-index: 0;
+  animation: rotateBg 30s linear infinite;
+}
+
+@keyframes rotateBg {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Glassmorphism Classes */
+.glass-sidebar {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-chat-container {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Hide Scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes message-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message-animate {
+  animation: message-in 0.3s ease-out forwards;
+}
