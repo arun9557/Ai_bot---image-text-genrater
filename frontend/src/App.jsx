@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { 
-  Send, Layout, Rocket, ShieldCheck, Cpu, 
+import {
+  Send, Layout, Rocket, ShieldCheck, Cpu,
   RotateCcw, Bot, User, MessageCircle
 } from "lucide-react";
 
@@ -52,14 +52,14 @@ const App = () => {
     try {
       // In a real scenario, we could call the Flask backend at /api/chat
       // Call backend API
-    
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: cleanText })
       });
       const data = await response.json();
-      
+
       setIsTyping(false);
       const botMsg = {
         id: Date.now().toString() + "_bot",
@@ -98,9 +98,9 @@ const App = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc] overflow-hidden flex items-center justify-center p-4 pt-[4vh]">
       <div className="mesh-gradient-bg"></div>
-      
+
       <div className="w-full max-w-6xl h-[90vh] grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 animate-in fade-in duration-700 relative z-10">
-        
+
         {/* Sidebar */}
         <aside className="hidden lg:flex flex-col glass-sidebar rounded-3xl p-6 h-full shadow-lg">
           <div className="text-center mb-8">
@@ -109,9 +109,9 @@ const App = () => {
             </div>
             <div className="w-28 h-28 mx-auto rounded-[32px] bg-gradient-to-br from-primary to-[#58ebd3] p-[3px] mb-4 shadow-xl shadow-primary/20">
               <div className="w-full h-full rounded-[29px] bg-white flex items-center justify-center overflow-hidden">
-                <img 
-                  src="https://api.dicebear.com/7.x/bottts/svg?seed=Arun" 
-                  alt="Arun AI" 
+                <img
+                  src="https://api.dicebear.com/7.x/bottts/svg?seed=Arun"
+                  alt="Arun AI"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -141,8 +141,11 @@ const App = () => {
         </aside>
 
         {/* Main Chat Container */}
-        <main className="flex flex-col glass-chat-container rounded-3xl overflow-hidden h-full shadow-2xl relative">
-          
+        <main 
+          className="flex flex-col glass-chat-container rounded-3xl overflow-hidden h-full shadow-2xl relative bg-cover bg-center"
+          style={{ backgroundImage: "url('https://i.pinimg.com/736x/1b/24/67/1b24675a1e16a5928604b84bdb986972.jpg')" }}
+        >
+
           {/* Header */}
           <header className="p-4 sm:p-6 border-b flex items-center justify-between bg-white/40 backdrop-blur-md">
             <div className="flex items-center gap-4">
@@ -155,7 +158,7 @@ const App = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={() => setMessages([messages[0]])}
                 className="w-10 h-10 rounded-xl bg-white/80 border flex items-center justify-center hover:bg-white transition-colors shadow-sm"
                 title="Reset Chat"
@@ -168,20 +171,18 @@ const App = () => {
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-8 space-y-6 bg-white/10">
             {messages.map((msg) => (
-              <div 
-                key={msg.id} 
+              <div
+                key={msg.id}
                 className={`flex gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''} animate-in slide-in-from-bottom-4 duration-300`}
               >
-                <div className={`w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center shadow-md ${
-                  msg.sender === 'user' ? 'bg-white border' : 'bg-primary text-white'
-                }`}>
+                <div className={`w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center shadow-md ${msg.sender === 'user' ? 'bg-white border' : 'bg-primary text-white'
+                  }`}>
                   {msg.sender === 'user' ? <User size={18} /> : <Bot size={18} />}
                 </div>
-                <div className={`max-w-[85%] sm:max-w-[70%] rounded-2xl p-4 text-sm leading-relaxed shadow-sm ${
-                  msg.sender === 'user' 
-                    ? 'bg-primary text-white rounded-tr-none shadow-primary/20' 
-                    : 'bg-white/80 border border-white/40 backdrop-blur-sm text-[#1e293b] rounded-tl-none'
-                }`}>
+                <div className={`max-w-[85%] sm:max-w-[70%] rounded-2xl p-4 text-sm leading-relaxed shadow-sm ${msg.sender === 'user'
+                  ? 'bg-primary text-white rounded-tr-none shadow-primary/20'
+                  : 'bg-white/80 border border-white/40 backdrop-blur-sm text-[#1e293b] rounded-tl-none'
+                  }`}>
                   {formatText(msg.text)}
                   <div className={`text-[10px] mt-2 opacity-60 font-medium ${msg.sender === 'user' ? 'text-right' : ''}`}>
                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -216,15 +217,15 @@ const App = () => {
           {/* Input Area */}
           <div className="p-4 sm:p-8 pt-3 bg-white/40 backdrop-blur-md">
             <div className="relative group max-w-4xl mx-auto">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask about my work..."
                 className="w-full bg-white border border-white/80 rounded-2xl px-6 py-4 outline-none focus:ring-4 focus:ring-primary/10 transition-all group-hover:shadow-lg pr-16 text-[#1e293b]"
               />
-              <button 
+              <button
                 onClick={() => handleSend()}
                 className="absolute right-2 top-2 bottom-2 w-12 rounded-xl bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20"
               >
@@ -239,9 +240,9 @@ const App = () => {
 };
 
 const NavBtn = ({ icon, label, href }) => (
-  <a 
-    href={href} 
-    target="_blank" 
+  <a
+    href={href}
+    target="_blank"
     rel="noopener"
     className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold text-[#64748b] hover:bg-white hover:text-primary transition-all hover:translate-x-1 hover:shadow-sm"
   >
@@ -250,7 +251,7 @@ const NavBtn = ({ icon, label, href }) => (
 );
 
 const QuickPrompt = ({ label, onClick }) => (
-  <button 
+  <button
     onClick={onClick}
     className="px-4 py-2 rounded-xl bg-white/80 border border-white/40 text-xs font-bold whitespace-nowrap hover:border-primary hover:text-primary transition-all active:scale-95 shadow-sm"
   >
