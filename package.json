@@ -5,6 +5,7 @@
     "frontend-install": "cd frontend && npm install",
     "frontend-dev": "cd frontend && npm run dev",
     "backend-dev": "cd backend && python app.py",
-    "install-all": "npm run frontend-install && pip install -r backend/requirements.txt"
+    "install-all": "npm run frontend-install && pip install -r backend/requirements.txt",
+    "build": "cd frontend && npm install && npm run build"
   }
 }
