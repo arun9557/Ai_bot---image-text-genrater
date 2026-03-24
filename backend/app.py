@@ -6,8 +6,9 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 # Initialize Flask app
-# Static folder is where Vite builds the frontend
-app = Flask(__name__, static_folder='../frontend/dist', static_url_path='')
+# On local, it looks for ../frontend/dist. On Vercel, we serve API independently.
+dist_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../frontend/dist'))
+app = Flask(__name__, static_folder=dist_path if os.path.exists(dist_path) else None, static_url_path='')
 CORS(app)  # Enable CORS for development
 
 # Load environment variables
