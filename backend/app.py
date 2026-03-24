@@ -14,8 +14,8 @@ CORS(app)  # Enable CORS for development
 load_dotenv()
 
 # Landbot Credentials
-LANDBOT_TOKEN = os.getenv("LANDBOT_API_TOKEN", "1e598648579ae2ead639b42e23c0cd7177ea952c")
-LANDBOT_BOT_ID = os.getenv("LANDBOT_BOT_ID", "3887520")
+LANDBOT_TOKEN = os.getenv("LANDBOT_API_TOKEN")
+LANDBOT_BOT_ID = os.getenv("LANDBOT_BOT_ID")
 
 # Session Store (to keep track of Landbot customer IDs)
 sessions = {}
