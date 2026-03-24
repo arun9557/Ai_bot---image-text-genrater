@@ -51,12 +51,19 @@ const App = () => {
     // Simulated AI response based on Arun's data or calling backend
     try {
       // In a real scenario, we could call the Flask backend at /api/chat
-      // Call backend API
+      let session_id = window.sessionStorage.getItem('chat_uid');
+      if (!session_id) {
+        session_id = "arun_" + Date.now();
+        window.sessionStorage.setItem('chat_uid', session_id);
+      }
 
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: cleanText })
+        body: JSON.stringify({ 
+          message: cleanText,
+          user_id: session_id
+        })
       });
       const data = await response.json();
 
